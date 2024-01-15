@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.5/axios.js"></script>
+</head>
+<body>
+
+    <div id="app">
+        <h1>民國時間轉換</h1>
+        <input type="date" v-model="selectDate">
+        <p>民國年：{{rocYear}}</p>
+        <ul>
+            <li v-for="(item,index) in history" :key="index">
+                所選年:{{item.year}}民國年:{{item.roc}}
+            </li>
+           
+        </ul>
+    </div>
+    
+    <script>
+        const createApp = Vue.createApp;
+
+        const app = createApp({
+            data(){
+                return{
+                    selectDate:'',
+                    history:[],
+
+                }
+            },
+            computed:{
+                //不會修改當前的data資料，而是取得data資料後重新運算，再渲染
+                rocYear(){
+                   if(this.selectDate){
+                       const year = new Date(this.selectDate).getFullYear();
+                       //console.log(year);
+                       return year >= 1912 ? year-1911:null
+                   }
+                   return null
+                },
+
+            },
+            watch:{
+                //監聽單一特定值，觸發方法，可以修改定義的資料
+                //寫你要watch的資料
+                selectDate(n,o){
+                    console.log(n,o);
+                    const year = new Date(n).getFullYear();
+                    console.log(year);
+                    if(year>=1911){
+                        this.history.push({
+                            year,
+                            roc:year-1911
+                        })
+                    }
+                }
+            }
+        })
+
+        app.mount('#app')
+
+    </script>
+</body>
+</html>
